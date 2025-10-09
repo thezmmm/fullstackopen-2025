@@ -3,15 +3,16 @@ import Filter from "./Filter.jsx";
 import PersonForm from "./PersonForm.jsx";
 import Persons from "./Persons.jsx";
 import axios from "axios";
+import phoneBookService from "./service/phoneBookService.jsx";
 
 const App = () => {
     const [persons, setPersons] = useState([])
 
     useEffect(
         () => {
-            axios.get('http://localhost:3001/persons').then(response => {
+            phoneBookService.getAll().then(data => {
                 // console.log(response.data)
-                setPersons(response.data)
+                setPersons(data)
                 }
             )
         },[])
@@ -29,7 +30,7 @@ const App = () => {
             <h3>add a new</h3>
             <PersonForm persons={persons} setPersons={setPersons}/>
             <h3>Numbers</h3>
-            <Persons personsToShow={personsToShow}/>
+            <Persons personsToShow={personsToShow} setPersons={setPersons}/>
         </div>
     )
 }
