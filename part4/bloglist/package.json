@@ -1,0 +1,19 @@
+{
+  "name": "bloglist",
+  "version": "1.0.0",
+  "description": "In this part, we will continue our work on the backend. Our first major theme will be writing unit and integration tests for the backend. After we have covered testing, we will take a look at implementing user authentication and authorization.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node --watch index.js",
+    "test": "node --test"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "lodash": "^4.17.21",
+    "mongoose": "^8.19.2"
+  }
+}
