@@ -17,6 +17,21 @@ app.use(express.json());
 app.use(express.static('dist'));
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'));
 
+const errorHandler = (error, request, response, next) => {
+    console.error(error.message)
+    if (error.name === 'CastError') {
+        return response.status(400).send({ error: 'malformatted id' })
+    }
+
+    if (error.name === 'ValidationError') {
+        return response.status(400).json({ error: error.message })
+    }
+
+    next(error)
+}
+
+app.use(errorHandler);
+
 // let notes = [
 //     {
 //         "id": "1",
@@ -45,10 +60,7 @@ mongoose.connect(mongodb_url)
 app.get('/api/persons', (req, res) => {
     Person.find({}).then(persons => {
         res.json(persons);
-    }).catch(err => {
-        console.error(err);
-        res.status(500).end();
-    })
+    }).catch(err => next(err))
     // res.json(notes);
 })
 
@@ -56,10 +68,7 @@ app.get('/info', (req, res) => {
     Person.countDocuments({}).then(count => {
         const date = new Date();
         res.send(`<p>Phonebook has info for ${count} people</p><p>${date}</p>`);
-    }).catch(err => {
-        console.error(err);
-        res.status(500).end();
-    })
+    }).catch(err => next(err))
 })
 
 app.get('/api/persons/:id', (req, res) => {
@@ -76,10 +85,7 @@ app.get('/api/persons/:id', (req, res) => {
         } else {
             res.status(404).end();
         }
-    }).catch(err => {
-        console.error(err);
-        res.status(500).end();
-    })
+    }).catch(err => next(err))
 })
 
 app.delete('/api/persons/:id', (req, res) => {
@@ -88,10 +94,7 @@ app.delete('/api/persons/:id', (req, res) => {
     // res.status(204).end();
     Person.findByIdAndDelete(req.params.id).then(() => {
         res.status(204).end();
-    }).catch(err => {
-        console.error(err);
-        res.status(500).end();
-    })
+    }).catch(err => next(err))
 })
 
 app.post('/api/persons', express.json(), (req, res) => {
@@ -109,11 +112,12 @@ app.post('/api/persons', express.json(), (req, res) => {
     // if (nameExists) {
     //     return res.status(400).json({ error: 'name must be unique' });
     // }
-    Person.findOne({ name: body.name }).then(existingPerson => {
-        if (existingPerson) {
-            return res.status(400).json({ error: 'name must be unique' });
-        }
-    })
+
+    // Person.findOne({ name: body.name }).then(existingPerson => {
+    //     if (existingPerson) {
+    //         return res.status(400).json({ error: 'name must be unique' });
+    //     }
+    // })
 
     // const newNote = {
     //     id: (Math.random() * 10000).toFixed(0),
@@ -129,10 +133,30 @@ app.post('/api/persons', express.json(), (req, res) => {
     })
     person.save().then(savedPerson => {
         res.json(savedPerson);
-    }).catch(err => {
-        console.error(err);
-        res.status(500).end();
-    })
+    }).catch(err => next(err))
+})
+
+app.put('/api/persons/:id', express.json(), (req, res, next) => {
+    const body = req.body;
+    if (!body.name) {
+        return res.status(400).json({ error: 'name is missing' });
+    }
+
+    if (!body.number) {
+        return res.status(400).json({ error: 'number is missing' });
+    }
+    const person = {
+        name: body.name,
+        number: body.number
+    }
+    console.log('Updating person:', person);
+    Person.findByIdAndUpdate(
+        req.params.id,
+        person,
+        { new: true, runValidators: true, context: 'query' }
+    ).then(updatedPerson => {
+        res.json(updatedPerson);
+    }).catch(err => next(err))
 })
 
 const PORT = process.env.PORT || 3001;
