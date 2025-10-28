@@ -1,21 +1,21 @@
 require('dotenv').config()
-const express = require('express');
-const Person = require('./models/Person');
-const morgan = require('morgan');
+const express = require('express')
+const Person = require('./models/Person')
+const morgan = require('morgan')
 morgan.token('body',
     (req) => {
         if (['POST', 'PUT', 'PATCH'].includes(req.method)) {
-            return JSON.stringify(req.body);
+            return JSON.stringify(req.body)
         }
-        return '';
+        return ''
     }
-);
-const mongoose = require('mongoose');
-mongoose.set('strictQuery', false);
-const app = express();
-app.use(express.json());
-app.use(express.static('dist'));
-app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'));
+)
+const mongoose = require('mongoose')
+mongoose.set('strictQuery', false)
+const app = express()
+app.use(express.json())
+app.use(express.static('dist'))
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
 
 // let notes = [
 //     {
@@ -40,67 +40,67 @@ app.use(morgan(':method :url :status :res[content-length] - :response-time ms :b
 //     }
 // ]
 
-const mongodb_url = process.env.MONGODB_URL;
+const mongodb_url = process.env.MONGODB_URL
 mongoose.connect(mongodb_url)
 app.get('/api/persons', (req, res,next) => {
     Person.find({}).then(persons => {
-        res.json(persons);
+        res.json(persons)
     }).catch(err => next(err))
-    // res.json(notes);
+    // res.json(notes)
 })
 
 app.get('/info', (req, res,next) => {
     Person.countDocuments({}).then(count => {
-        const date = new Date();
-        res.send(`<p>Phonebook has info for ${count} people</p><p>${date}</p>`);
+        const date = new Date()
+        res.send(`<p>Phonebook has info for ${count} people</p><p>${date}</p>`)
     }).catch(err => next(err))
 })
 
 app.get('/api/persons/:id', (req, res,next) => {
-    // const id = req.params.id;
-    // const note = notes.find(note => note.id === id);
+    // const id = req.params.id
+    // const note = notes.find(note => note.id === id)
     // if (note) {
-    //     res.json(note);
+    //     res.json(note)
     // } else {
-    //     res.status(404).end();
+    //     res.status(404).end()
     // }
     Person.findById(req.params.id).then(person => {
         if (person) {
-            res.json(person);
+            res.json(person)
         } else {
-            res.status(404).end();
+            res.status(404).end()
         }
     }).catch(err => next(err))
 })
 
 app.delete('/api/persons/:id', (req, res,next) => {
-    // const id = req.params.id;
-    // notes = notes.filter(note => note.id !== id);
-    // res.status(204).end();
+    // const id = req.params.id
+    // notes = notes.filter(note => note.id !== id)
+    // res.status(204).end()
     Person.findByIdAndDelete(req.params.id).then(() => {
-        res.status(204).end();
+        res.status(204).end()
     }).catch(err => next(err))
 })
 
 app.post('/api/persons', express.json(), (req, res,next) => {
-    const body = req.body;
+    const body = req.body
 
     if (!body.name) {
-        return res.status(400).json({ error: 'name is missing' });
+        return res.status(400).json({ error: 'name is missing' })
     }
 
     if (!body.number) {
-        return res.status(400).json({ error: 'number is missing' });
+        return res.status(400).json({ error: 'number is missing' })
     }
 
-    // const nameExists = notes.find(note => note.name === body.name);
+    // const nameExists = notes.find(note => note.name === body.name)
     // if (nameExists) {
-    //     return res.status(400).json({ error: 'name must be unique' });
+    //     return res.status(400).json({ error: 'name must be unique' })
     // }
 
     // Person.findOne({ name: body.name }).then(existingPerson => {
     //     if (existingPerson) {
-    //         return res.status(400).json({ error: 'name must be unique' });
+    //         return res.status(400).json({ error: 'name must be unique' })
     //     }
     // })
 
@@ -110,37 +110,37 @@ app.post('/api/persons', express.json(), (req, res,next) => {
     //     number: body.number
     // }
     //
-    // notes = notes.concat(newNote);
-    // res.json(newNote);
+    // notes = notes.concat(newNote)
+    // res.json(newNote)
     const person = new Person({
         name: body.name,
         number: body.number
     })
     person.save().then(savedPerson => {
-        res.json(savedPerson);
+        res.json(savedPerson)
     }).catch(err => next(err))
 })
 
 app.put('/api/persons/:id', express.json(), (req, res, next) => {
-    const body = req.body;
+    const body = req.body
     if (!body.name) {
-        return res.status(400).json({ error: 'name is missing' });
+        return res.status(400).json({ error: 'name is missing' })
     }
 
     if (!body.number) {
-        return res.status(400).json({ error: 'number is missing' });
+        return res.status(400).json({ error: 'number is missing' })
     }
     const person = {
         name: body.name,
         number: body.number
     }
-    console.log('Updating person:', person);
+    console.log('Updating person:', person)
     Person.findByIdAndUpdate(
         req.params.id,
         person,
         { new: true, runValidators: true, context: 'query' }
     ).then(updatedPerson => {
-        res.json(updatedPerson);
+        res.json(updatedPerson)
     }).catch(err => next(err))
 })
 
@@ -157,10 +157,10 @@ const errorHandler = (error, request, response, next) => {
     next(error)
 }
 
-app.use(errorHandler);
+app.use(errorHandler)
 
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3001
 
 app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+    console.log(`Server running on port ${PORT}`)
 })
