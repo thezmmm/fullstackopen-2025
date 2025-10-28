@@ -16,15 +16,10 @@ const PersonForm = ({persons,setPersons,setNotification}) => {
 
     const addName = (event) => {
         event.preventDefault()
-        const usedIds = persons.map(p => Number(p.id))
-        let newId = 1
-        while (usedIds.includes(newId)) {
-            newId += 1
-        }
+
         const nameObject = {
             name: newName,
             number: newNumber,
-            id: String(newId),
         }
         // if (persons.some(person => person.name === newName)) {
         //     alert(`${newName} is already added to phonebook`)
@@ -39,22 +34,30 @@ const PersonForm = ({persons,setPersons,setNotification}) => {
                         setPersons(persons.map(p => p.id !== nameObject.id ? p : returnedPerson))
                     })
                     .catch(error => {
-                        setNotification({message: `Information of ${nameObject.name} has already been removed from server`, type: 'error'})
+                        setNotification({message: error.message, type: 'error'})
                         setTimeout(() => {
                             setNotification({message: null, type: null})
                         }, 5000)
-                        setPersons(persons.filter(p => p.id !== nameObject.id))
                         }
                     )
                 return
             }
         }
-        setNotification({message: `Added ${nameObject.name}`, type: 'success'})
-        setTimeout(() => {
-            setNotification({message: null, type: null})
-        }, 5000)
-        phoneBookService.create(nameObject)
-        setPersons(persons.concat(nameObject))
+        phoneBookService
+            .create(nameObject)
+            .then(returnedPerson => {
+                setPersons(persons.concat(returnedPerson))
+                setNotification({message: `Added ${nameObject.name}`, type: 'success'})
+                setTimeout(() => {
+                    setNotification({message: null, type: null})
+                }, 5000)
+            }).catch(error => {
+                const errorMessage = error.response?.data?.error || error.message
+                setNotification({message: errorMessage, type: 'error'})
+                setTimeout(() => {
+                    setNotification({message: null, type: null})
+                }, 5000)
+            })
     }
 
     return (

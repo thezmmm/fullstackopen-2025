@@ -17,21 +17,6 @@ app.use(express.json());
 app.use(express.static('dist'));
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'));
 
-const errorHandler = (error, request, response, next) => {
-    console.error(error.message)
-    if (error.name === 'CastError') {
-        return response.status(400).send({ error: 'malformatted id' })
-    }
-
-    if (error.name === 'ValidationError') {
-        return response.status(400).json({ error: error.message })
-    }
-
-    next(error)
-}
-
-app.use(errorHandler);
-
 // let notes = [
 //     {
 //         "id": "1",
@@ -57,21 +42,21 @@ app.use(errorHandler);
 
 const mongodb_url = process.env.MONGODB_URL;
 mongoose.connect(mongodb_url)
-app.get('/api/persons', (req, res) => {
+app.get('/api/persons', (req, res,next) => {
     Person.find({}).then(persons => {
         res.json(persons);
     }).catch(err => next(err))
     // res.json(notes);
 })
 
-app.get('/info', (req, res) => {
+app.get('/info', (req, res,next) => {
     Person.countDocuments({}).then(count => {
         const date = new Date();
         res.send(`<p>Phonebook has info for ${count} people</p><p>${date}</p>`);
     }).catch(err => next(err))
 })
 
-app.get('/api/persons/:id', (req, res) => {
+app.get('/api/persons/:id', (req, res,next) => {
     // const id = req.params.id;
     // const note = notes.find(note => note.id === id);
     // if (note) {
@@ -88,7 +73,7 @@ app.get('/api/persons/:id', (req, res) => {
     }).catch(err => next(err))
 })
 
-app.delete('/api/persons/:id', (req, res) => {
+app.delete('/api/persons/:id', (req, res,next) => {
     // const id = req.params.id;
     // notes = notes.filter(note => note.id !== id);
     // res.status(204).end();
@@ -97,7 +82,7 @@ app.delete('/api/persons/:id', (req, res) => {
     }).catch(err => next(err))
 })
 
-app.post('/api/persons', express.json(), (req, res) => {
+app.post('/api/persons', express.json(), (req, res,next) => {
     const body = req.body;
 
     if (!body.name) {
@@ -158,6 +143,21 @@ app.put('/api/persons/:id', express.json(), (req, res, next) => {
         res.json(updatedPerson);
     }).catch(err => next(err))
 })
+
+const errorHandler = (error, request, response, next) => {
+    console.error(error.message)
+    if (error.name === 'CastError') {
+        return response.status(400).send({ error: 'malformatted id' })
+    }
+
+    if (error.name === 'ValidationError') {
+        return response.status(400).json({ error: error.message })
+    }
+
+    next(error)
+}
+
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 3001;
 
