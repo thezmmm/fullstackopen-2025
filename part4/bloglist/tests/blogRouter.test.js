@@ -118,7 +118,38 @@ describe('Blog API tests', () => {
             .send(newBlog)
             .expect(400)
     })
+    test('DELETE /api/blogs/:id deletes a blog', async () => {
+        const blogsAtStart = await Blog.find({})
+        const blogToDelete = blogsAtStart[0]
+
+        await api
+            .delete(`/api/blogs/${blogToDelete._id}`)
+            .expect(204)
+
+        const blogsAtEnd = await Blog.find({})
+        assert.strictEqual(blogsAtEnd.length, blogsAtStart.length - 1)
+        const titles = blogsAtEnd.map(b => b.title)
+        assert(!titles.includes(blogToDelete.title))
+    })
+    test('PUT /api/blogs/:id updates a blog', async () => {
+        const blogsAtStart = await Blog.find({})
+        const blogToUpdate = blogsAtStart[0]
+
+        const updatedData = { likes: 10 }
+        const response = await api
+            .put(`/api/blogs/${blogToUpdate._id}`)
+            .send(updatedData)
+            .expect(200)
+            .expect('Content-Type', /application\/json/)
+
+        assert.strictEqual(response.body.likes, 10)
+        assert.strictEqual(response.body.title, blogToUpdate.title)
+        assert.strictEqual(response.body.author, blogToUpdate.author)
+    })
 })
+
+
+
 
 after(async () => {
     await mongoose.connection.close()
