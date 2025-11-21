@@ -52,12 +52,10 @@ test('dummy returns one', () => {
 describe('total likes', () => {
     const listWithOneBlog = [
         {
-            _id: '5a422aa71b54a676234d17f8',
             title: 'Go To Statement Considered Harmful',
             author: 'Edsger W. Dijkstra',
             url: 'https://homepages.cwi.nl/~storm/teaching/reader/Dijkstra68.pdf',
             likes: 5,
-            __v: 0
         }
     ]
     test('when list has only one blog, equals the likes of that', () => {
@@ -70,12 +68,10 @@ describe('favorite blog', () => {
     test('the blog with most likes', () => {
         const result = listHelper.favoriteBlog(blogs)
         const expectedFavorite = {
-            _id: "5a422b3a1b54a676234d17f9",
             title: "Canonical string reduction",
             author: "Edsger W. Dijkstra",
             url: "http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html",
             likes: 12,
-            __v: 0
         }
         assert.deepStrictEqual(result, expectedFavorite)
     })
