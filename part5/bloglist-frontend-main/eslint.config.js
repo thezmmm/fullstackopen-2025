@@ -28,6 +28,14 @@ export default [
         'warn',
         { allowConstantExport: true }
       ]
+    },
+  },
+  {
+    files: ['**/*.test.{js,jsx}'],
+    languageOptions: {
+      globals: {
+        ...globals.vitest
+      }
     }
   }
 ]
