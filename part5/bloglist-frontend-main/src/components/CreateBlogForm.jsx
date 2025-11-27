@@ -1,5 +1,6 @@
 import blogService from "../services/blogService.js";
 import {useState} from "react";
+import Togglable from "./Togglable.jsx";
 
 const CreateBlogForm = ({addBlog, setNotification}) => {
     const [title, setTitle] = useState('')
@@ -29,7 +30,7 @@ const CreateBlogForm = ({addBlog, setNotification}) => {
     }
 
     return (
-        <div>
+        <Togglable buttonLabel="create new blog">
             <h2>Create new</h2>
             <form onSubmit={handleCreateBlog}>
                 <div>
@@ -58,7 +59,7 @@ const CreateBlogForm = ({addBlog, setNotification}) => {
                 </div>
                 <button type="submit">create</button>
             </form>
-        </div>
+        </Togglable>
 
     )
 }

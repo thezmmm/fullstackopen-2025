@@ -21,7 +21,7 @@ const LoginForm = ({setUser,setNotification}) => {
             setUsername('')
             setPassword('')
         }catch (exception){
-            console.log('wrong credentials')
+            console.log(exception)
             const message = {
                 message: 'wrong username or password',
                 type: 'error'
