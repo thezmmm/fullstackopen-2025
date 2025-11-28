@@ -13,7 +13,8 @@ const CreateBlogForm = ({addBlog, setNotification}) => {
         const newBlog = {
             title,
             author,
-            url
+            url,
+            likes: 0
         }
         await blogService.create(newBlog)
         addBlog(newBlog)
@@ -36,7 +37,7 @@ const CreateBlogForm = ({addBlog, setNotification}) => {
                 <div>
                     <label>
                         title
-                        <input type="text" value={title}
+                        <input type="text" value={title} name="title"
                                onChange={({ target }) => setTitle(target.value)}
                         />
                     </label>
@@ -44,7 +45,7 @@ const CreateBlogForm = ({addBlog, setNotification}) => {
                 <div>
                     <label>
                         author
-                        <input type="text" value={author}
+                        <input type="text" value={author} name="author"
                                 onChange={({ target }) => setAuthor(target.value)}
                         />
                     </label>
@@ -52,7 +53,7 @@ const CreateBlogForm = ({addBlog, setNotification}) => {
                 <div>
                     <label>
                         url
-                        <input type="text" value={url}
+                        <input type="text" value={url} name="url"
                                onChange={({ target }) => setUrl(target.value)}
                         />
                     </label>
