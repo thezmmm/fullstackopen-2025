@@ -1,0 +1,2 @@
+## Advanced state management
+We'll learn about the lightweight version of Redux directly supported by React, namely the React context and useReducer hook, as well as the React Query library that simplifies the server state management.
