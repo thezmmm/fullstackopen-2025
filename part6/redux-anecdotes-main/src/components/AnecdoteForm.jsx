@@ -1,6 +1,6 @@
 import {useState} from "react";
 import {useDispatch} from "react-redux";
-import {create} from "../reducers/anecdoteSlice.js";
+import {createAnecdote} from "../reducers/anecdoteSlice.js";
 
 const AnecdoteForm = () => {
 
@@ -10,7 +10,7 @@ const AnecdoteForm = () => {
 
     const createNewAnecdote = (e) => {
         e.preventDefault()
-        dispatch(create(newAnecdote))
+        dispatch(createAnecdote(newAnecdote))
         setNewAnecdote('')
     }
 
