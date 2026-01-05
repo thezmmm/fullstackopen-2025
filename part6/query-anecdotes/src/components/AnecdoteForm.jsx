@@ -1,9 +1,12 @@
 import {useMutation, useQueryClient} from "@tanstack/react-query"
 import anecdoteService from "../services/anecdoteService.js"
+import {useNotification} from "../context/NotificationContext.jsx";
 
 const AnecdoteForm = () => {
 
     const queryClient = useQueryClient()
+
+    const {notification, showNotification} = useNotification()
 
     const anecdoteMutation = useMutation({
         mutationFn: anecdoteService.createNew,
@@ -16,6 +19,10 @@ const AnecdoteForm = () => {
         event.preventDefault()
         const content = event.target.anecdote.value
         event.target.anecdote.value = ''
+        if (content.length < 5){
+            showNotification(`Anecdote must be at least 5 characters long`)
+            return
+        }
         console.log('new anecdote')
         anecdoteMutation.mutate(content)
     }

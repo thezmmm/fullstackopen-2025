@@ -1,8 +1,11 @@
-import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
-import anecdoteService from "../services/anecdoteService.js";
+import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query"
+import anecdoteService from "../services/anecdoteService.js"
+import {useNotification} from "../context/NotificationContext.jsx";
 
 const AnecdoteList = () => {
     const queryClient = useQueryClient()
+
+    const {notification,showNotification} = useNotification()
 
     const { data: anecdotes, isLoading, isError, error, refetch } =
         useQuery({
@@ -20,6 +23,8 @@ const AnecdoteList = () => {
 
     const handleVote = async (id) => {
         voteAnecdote.mutate(id)
+        const anecdoteMessage = anecdotes.find(a => a.id === id).content
+        showNotification(`you voted '${anecdoteMessage}'`)
     }
 
     if (isLoading) {
