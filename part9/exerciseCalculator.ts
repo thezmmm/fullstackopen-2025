@@ -1,3 +1,25 @@
+interface MultiplyValues {
+    value1: number;
+    value2: number[];
+}
+
+const parseArguments = (args: string[]): MultiplyValues => {
+    if (args.length < 4) throw new Error('Not enough arguments');
+
+    const value1 = Number(args[2]);
+    if (isNaN(value1)) throw new Error('First value is not a number');
+
+    const value2 = args.slice(3).map(arg => {
+        const num = Number(arg);
+        if (isNaN(num)) throw new Error('One of the values is not a number');
+        return num;
+    });
+    return {
+        value1,
+        value2
+    }
+}
+
 const calculateExercises = (dailyExercises: number[], target: number) => {
     const periodLength = dailyExercises.length;
     const trainingDays = dailyExercises.filter(day => day > 0).length;
@@ -30,4 +52,12 @@ const calculateExercises = (dailyExercises: number[], target: number) => {
     };
 }
 
-console.log(calculateExercises([3, 0, 2, 4.5, 0, 3, 1], 2));
+
+try {
+    const { value1, value2 } = parseArguments(process.argv);
+    console.log(calculateExercises(value2, value1));
+}catch (e) {
+    if (e instanceof Error) {
+        console.log('Error:', e.message);
+    }
+}
