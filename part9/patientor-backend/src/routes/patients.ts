@@ -1,6 +1,6 @@
 import express from "express";
 import patientService from "../services/patientService";
-import {parsePatient} from "../utils/patientParser";
+import {PatientSchema} from "../type/Patient";
 
 const router = express.Router();
 
@@ -10,7 +10,7 @@ router.get("/", (_req, res) => {
 
 router.post("/", (req, res) => {
     try {
-        const newPatient = parsePatient(req.body);
+        const newPatient = PatientSchema.parse(req.body);
         if (!newPatient)
             throw new Error("Invalid patient data");
         const addPatient = patientService.addPatient(newPatient);
