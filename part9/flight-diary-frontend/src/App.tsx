@@ -1,10 +1,12 @@
-
+import DiaryList from "./components/DiaryList";
+import CreateDiary from "./components/CreateDiary";
 
 function App() {
 
   return (
     <>
-        Flight Diary Frontend
+        <CreateDiary />
+        <DiaryList />
     </>
   )
 }
