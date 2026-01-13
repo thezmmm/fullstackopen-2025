@@ -33,4 +33,19 @@ router.post("/", (req, res) => {
     }
 })
 
+router.post("/:id/entries", (req, res) => {
+    try {
+        const patientId = req.params.id;
+        const newEntry = req.body;
+        const addedEntry = patientService.addEntryToPatient(patientId, newEntry);
+        res.json(addedEntry);
+    } catch (e: unknown) {
+        let errorMessage = "Something went wrong.";
+        if (e instanceof Error) {
+            errorMessage += " Error: " + e.message;
+        }
+        res.status(400).send(errorMessage);
+    }
+});
+
 export default router;
