@@ -5,9 +5,10 @@ import {v4 as uuidv4} from "uuid";
 
 type OccupationalFormProps = {
     patientId: string;
+    setNotification: (message: string) => void;
 };
 
-const OccupationalHealthcareForm = ({patientId}: OccupationalFormProps) => {
+const OccupationalHealthcareForm = ({patientId,setNotification}: OccupationalFormProps) => {
     const [formData, setFormData] = useState<OccupationalHealthcareEntry>({
         id: uuidv4(),
         type: "OccupationalHealthcare",
@@ -43,7 +44,17 @@ const OccupationalHealthcareForm = ({patientId}: OccupationalFormProps) => {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        patientService.addEntry(patientId, formData);
+        try{
+            patientService.addEntry(patientId, formData);
+        }catch (error: unknown) {
+            if (error instanceof Error) {
+                setNotification(`Error adding entry: ${error.message}`);
+            } else {
+                setNotification("Unknown error occurred while adding entry");
+            }
+
+            setTimeout(() => setNotification(""), 5000);
+        }
     };
 
     return (

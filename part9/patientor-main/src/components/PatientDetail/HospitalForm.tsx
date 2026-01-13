@@ -5,9 +5,10 @@ import {v4 as uuidv4} from "uuid";
 
 type HospitalFormProps = {
     patientId: string;
+    setNotification: (message: string) => void;
 };
 
-const HospitalEntryForm = ({patientId}: HospitalFormProps) => {
+const HospitalEntryForm = ({patientId,setNotification}: HospitalFormProps) => {
     const [formData, setFormData] = useState<HospitalEntry>({
         id: uuidv4(),
         type: "Hospital",
@@ -42,7 +43,17 @@ const HospitalEntryForm = ({patientId}: HospitalFormProps) => {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        patientService.addEntry(patientId, formData);
+        try{
+            patientService.addEntry(patientId, formData);
+        }catch (error: unknown) {
+            if (error instanceof Error) {
+                setNotification(`Error adding entry: ${error.message}`);
+            } else {
+                setNotification("Unknown error occurred while adding entry");
+            }
+
+            setTimeout(() => setNotification(""), 5000);
+        }
     };
 
     return (

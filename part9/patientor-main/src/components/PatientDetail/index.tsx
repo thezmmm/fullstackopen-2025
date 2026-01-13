@@ -3,6 +3,7 @@ import {useEffect, useState} from "react";
 import { Diagnosis } from "../../types";
 import diagnosisService from "../../services/diagnosis";
 import AddPatientEntry from "./AddPatientEntry";
+import Notification from "./Notification";
 
 type PatientDetailProps = {
     patient:Patient;
@@ -11,6 +12,8 @@ type PatientDetailProps = {
 const PatientDetail = ({patient}:PatientDetailProps) => {
 
     const[diagnoses, setDiagnoses] = useState<Diagnosis[]>([]);
+
+    const [notification, setNotification] = useState<string>("");
 
     useEffect(() => {
         const fetchDiagnoses = async () => {
@@ -27,7 +30,8 @@ const PatientDetail = ({patient}:PatientDetailProps) => {
             <h2>{patient.name}</h2>
             ssn: {patient.ssn} <br/>
             occupation: {patient.occupation}<br/>
-            <AddPatientEntry patientId={patient.id} />
+            <Notification message={notification}/>
+            <AddPatientEntry patientId={patient.id} setNotification={setNotification}/>
             <h3>entries</h3>
             {patient.entries.map(entry => (
                 <div>
