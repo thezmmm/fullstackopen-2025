@@ -33,7 +33,7 @@ const getPatientById = (id: string): Patient | undefined => {
 const addEntryToPatient = (patientId: string, entry: Entry): Patient | undefined => {
     const patient = data.find(p => p.id === patientId);
     if (patient) {
-        patient.entries.push(entry);
+        (patient.entries as Entry[]).push(entry);
         return patient;
     }
     return undefined;
