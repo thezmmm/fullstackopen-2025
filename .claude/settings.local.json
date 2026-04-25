@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install *)",
+      "Bash(npm run *)",
+      "Bash(node --check app.js)",
+      "Bash(node --check index.js)",
+      "Bash(node --check controllers/blogRouter.js)"
+    ]
+  }
+}
