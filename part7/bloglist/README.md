@@ -1,51 +1,66 @@
-# Bloglist — Full Stack Open Part 7
+# Bloglist
 
-Full-stack blog listing application. Backend built in Part 4, frontend in Part 5, now combined into a single repository for Part 7 refactoring exercises (7.7–7.20).
+Full-stack blog listing application built for Full Stack Open 2025 Part 7. Users can create, like, and delete blog posts, browse other users, and leave comments.
 
 ## Project Structure
 
 ```
 bloglist/
-├── backend/    # Express + MongoDB (Node.js)
-└── frontend/   # React + Vite
+├── backend/    # Express 5 + MongoDB
+└── frontend/   # React 19 + Vite
 ```
+
+## Tech Stack
+
+**Backend**
+- Express 5, Mongoose 8
+- JWT authentication (`jsonwebtoken`), bcrypt
+- Node.js built-in test runner + Supertest
+
+**Frontend**
+- React 19, React Router v7
+- Redux Toolkit + React Redux (client state)
+- TanStack Query v5 (server state)
+- React-Bootstrap (UI)
+- Axios, Prettier, ESLint
 
 ## Getting Started
 
-**Backend** (port 3003):
+Run backend and frontend in separate terminals.
+
+**Backend** (port 3003)
 ```bash
 cd backend
 npm install
 npm run dev
 ```
 
-**Frontend** (port 5173, proxies `/api` → `localhost:3003`):
+**Frontend** (port 5173, proxies `/api` → `localhost:3003`)
 ```bash
 cd frontend
 npm install
 npm run dev
 ```
 
-Run both simultaneously in separate terminals.
-
-**Production build** (serve frontend from backend):
+**Production build** (serves frontend from backend)
 ```bash
 cd backend
-npm run build:ui   # builds frontend and copies dist/ to backend
+npm run build:ui   # builds frontend and copies dist/ to backend/dist/
 npm start
 ```
 
 ## Environment Variables
 
-Backend requires `backend/.env`:
+Create `backend/.env`:
+
 ```
 MONGODB_URI=<your-mongodb-uri>
-PORT=3003
 TEST_MONGODB_URI=<your-test-mongodb-uri>
+PORT=3003
 SECRET=<jwt-secret>
 ```
 
-## API Endpoints
+## API
 
 | Method | Path | Auth | Description |
 |--------|------|------|-------------|
@@ -54,51 +69,47 @@ SECRET=<jwt-secret>
 | POST | `/api/users` | — | Register user |
 | GET | `/api/blogs` | — | List all blogs |
 | POST | `/api/blogs` | JWT | Create blog |
-| PUT | `/api/blogs/:id` | JWT | Update blog (likes etc.) |
-| DELETE | `/api/blogs/:id` | JWT | Delete blog (owner only) |
+| PUT | `/api/blogs/:id` | JWT | Update blog |
+| DELETE | `/api/blogs/:id` | JWT (owner) | Delete blog |
 | GET | `/api/blogs/:id/comments` | — | Get comments |
 | POST | `/api/blogs/:id/comments` | — | Add comment |
 
-## Tech Stack
+## Frontend Architecture
 
-**Backend:** Express 5, Mongoose, JWT (`jsonwebtoken`), bcrypt  
-**Frontend:** React 19, React Router v7, TanStack Query v5, Axios
+### State Management
 
-## Part 7 Refactoring Exercises
+| State | Tool | Location |
+|-------|------|----------|
+| Logged-in user | Redux slice | `src/reducers/userReducer.js` |
+| Notifications | Redux slice | `src/reducers/notificationReducer.js` |
+| Blog data | TanStack Query | `queryKey: ['blogs']` |
+| User list | TanStack Query | `queryKey: ['users']` |
 
-### 7.7 — Frontend and backend in the same repository
-Combine into a single repo with separate `package.json` files. ✅
+### Routes
 
-### 7.8 — Error boundary
-Implement `ErrorBoundary` component to catch render errors gracefully. ✅
+| Path | Component | Description |
+|------|-----------|-------------|
+| `/` | `BlogList` + `CreateBlogForm` | Home — sorted blog list |
+| `/users` | `Users` | All users with blog counts |
+| `/users/:id` | `UserView` | Individual user's blogs |
+| `/blogs/:id` | `BlogView` | Blog detail with comments |
+| `*` | `NotFound` | 404 fallback |
 
-### 7.9 — Nonexisting routes
-Handle unknown routes with a "Page not found" message via React Router splat route. ✅
+### Key Behaviours
 
-### 7.10 — Automatic code formatting
-Integrate Prettier with format-on-save.
+- **JWT expiry check on load** — token's `exp` field is decoded client-side; expired sessions are cleared from localStorage immediately without a network round-trip.
+- **Auto-logout on 401** — a global Axios interceptor dispatches `logout()` if any API call returns 401 (e.g. mid-session token expiry).
+- **Error boundary** — catches render errors in the route tree, shows the error message and a "try again" button.
 
-### 7.11–7.14 — State management
-Refactor global state using **React Query + Context**:
-- Notification state via `NotificationContext`
-- Blog data via TanStack Query (fetch, create, like, delete)
-- User/login state via `UserContext`
+## Frontend Scripts
 
-### 7.15 — Clean up the code
-- Extract localStorage logic into `storageService`
-- Use `useField` custom hook in forms
+```bash
+npm run dev       # start dev server
+npm run build     # production build
+npm run lint      # ESLint
+npm run format    # Prettier (writes in place)
+```
 
-### 7.16 — Users view
-Display all users with their blog post counts at `/users`. ✅
+## VS Code
 
-### 7.17 — Individual user view
-Show each user's blogs at `/users/:id` via clickable name links. ✅
-
-### 7.18 — Comments, step 1
-Fetch and display anonymous comments on individual blog pages. ✅
-
-### 7.19 — Comments, step 2
-Allow users to add comments through the frontend. ✅
-
-### 7.20 — Styling
-Improve UI appearance (Bootstrap / custom CSS).
+Install the **Prettier - Code formatter** extension (`esbenp.prettier-vscode`). Format-on-save is configured in `.vscode/settings.json`.
