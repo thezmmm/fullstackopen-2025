@@ -1,10 +1,8 @@
 import { useState, useImperativeHandle } from 'react'
+import { Button } from 'react-bootstrap'
 
 const Togglable = (props) => {
   const [visible, setVisible] = useState(false)
-
-  const hideWhenVisible = { display: visible ? 'none' : '' }
-  const showWhenVisible = { display: visible ? '' : 'none' }
 
   const toggleVisibility = () => setVisible(!visible)
 
@@ -12,13 +10,19 @@ const Togglable = (props) => {
 
   return (
     <div>
-      <div style={hideWhenVisible}>
-        <button onClick={toggleVisibility}>{props.buttonLabel}</button>
-      </div>
-      <div style={showWhenVisible}>
-        {props.children}
-        <button onClick={toggleVisibility}>cancel</button>
-      </div>
+      {!visible && (
+        <Button variant="primary" size="sm" onClick={toggleVisibility}>
+          {props.buttonLabel}
+        </Button>
+      )}
+      {visible && (
+        <div>
+          {props.children}
+          <Button variant="secondary" size="sm" className="mt-2" onClick={toggleVisibility}>
+            cancel
+          </Button>
+        </div>
+      )}
     </div>
   )
 }

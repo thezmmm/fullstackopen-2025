@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useParams } from 'react-router-dom'
+import { Button, Form, ListGroup, Badge, Spinner } from 'react-bootstrap'
 import blogService from '../services/blogService'
 import useField from '../hooks/useField'
 import NotFound from './NotFound'
@@ -28,7 +29,7 @@ const BlogView = () => {
     },
   })
 
-  if (isLoading) return <div>loading...</div>
+  if (isLoading) return <Spinner animation="border" size="sm" />
 
   const blog = blogs?.find((b) => b.id === id)
   if (!blog) return <NotFound message="Blog not found" />
@@ -46,23 +47,32 @@ const BlogView = () => {
     <div>
       <h2>{blog.title}</h2>
       <p>
-        <a href={blog.url}>{blog.url}</a>
+        <a href={blog.url} target="_blank" rel="noreferrer">
+          {blog.url}
+        </a>
       </p>
       <p>
-        {blog.likes} likes <button onClick={handleLike}>like</button>
+        <Badge bg="secondary" className="me-2">
+          {blog.likes} likes
+        </Badge>
+        <Button variant="outline-primary" size="sm" onClick={handleLike}>
+          ♥ like
+        </Button>
       </p>
-      <p>added by {blog.user?.name}</p>
+      <p className="text-muted">added by {blog.user?.name}</p>
 
-      <h3>comments</h3>
-      <form onSubmit={handleAddComment}>
-        <input {...commentProps} placeholder="add a comment..." />
-        <button type="submit">add comment</button>
-      </form>
-      <ul>
+      <h4 className="mt-4">comments</h4>
+      <Form onSubmit={handleAddComment} className="d-flex gap-2 mb-3">
+        <Form.Control {...commentProps} placeholder="add a comment..." />
+        <Button type="submit" variant="primary" size="sm">
+          add
+        </Button>
+      </Form>
+      <ListGroup>
         {blog.comments?.map((c, i) => (
-          <li key={i}>{c}</li>
+          <ListGroup.Item key={i}>{c}</ListGroup.Item>
         ))}
-      </ul>
+      </ListGroup>
     </div>
   )
 }

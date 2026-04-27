@@ -1,7 +1,7 @@
 import { Routes, Route } from 'react-router-dom'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { useEffect } from 'react'
-import { useDispatch } from 'react-redux'
+import { Container } from 'react-bootstrap'
 import { initUser } from './reducers/userReducer'
 import NavBar from './components/NavBar'
 import Notification from './components/Notification'
@@ -25,36 +25,40 @@ const App = () => {
 
   if (!user) {
     return (
-      <div>
+      <Container>
         <Notification />
         <LoginForm />
-      </div>
+      </Container>
     )
   }
 
   return (
     <div>
       <NavBar />
-      <Notification />
-      <ErrorBoundary>
-        <Routes>
-          <Route
-            path="/"
-            element={
-              <div>
-                <Togglable buttonLabel="create new blog">
-                  <CreateBlogForm />
-                </Togglable>
-                <BlogList />
-              </div>
-            }
-          />
-          <Route path="/users" element={<Users />} />
-          <Route path="/users/:id" element={<UserView />} />
-          <Route path="/blogs/:id" element={<BlogView />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </ErrorBoundary>
+      <Container>
+        <Notification />
+        <ErrorBoundary>
+          <Routes>
+            <Route
+              path="/"
+              element={
+                <div>
+                  <Togglable buttonLabel="create new blog">
+                    <CreateBlogForm />
+                  </Togglable>
+                  <div className="mt-3">
+                    <BlogList />
+                  </div>
+                </div>
+              }
+            />
+            <Route path="/users" element={<Users />} />
+            <Route path="/users/:id" element={<UserView />} />
+            <Route path="/blogs/:id" element={<BlogView />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </ErrorBoundary>
+      </Container>
     </div>
   )
 }

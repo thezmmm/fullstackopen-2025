@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useDispatch } from 'react-redux'
+import { Form, Button } from 'react-bootstrap'
 import blogService from '../services/blogService'
 import { notify } from '../reducers/notificationReducer'
 import useField from '../hooks/useField'
@@ -39,25 +40,24 @@ const CreateBlogForm = () => {
 
   return (
     <div>
-      <h2>Create new</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>
-            title <input {...titleProps} name="title" />
-          </label>
-        </div>
-        <div>
-          <label>
-            author <input {...authorProps} name="author" />
-          </label>
-        </div>
-        <div>
-          <label>
-            url <input {...urlProps} name="url" />
-          </label>
-        </div>
-        <button type="submit">create</button>
-      </form>
+      <h4>Create new</h4>
+      <Form onSubmit={handleSubmit}>
+        <Form.Group className="mb-2">
+          <Form.Label>title</Form.Label>
+          <Form.Control {...titleProps} name="title" />
+        </Form.Group>
+        <Form.Group className="mb-2">
+          <Form.Label>author</Form.Label>
+          <Form.Control {...authorProps} name="author" />
+        </Form.Group>
+        <Form.Group className="mb-3">
+          <Form.Label>url</Form.Label>
+          <Form.Control {...urlProps} name="url" />
+        </Form.Group>
+        <Button type="submit" variant="success" size="sm">
+          create
+        </Button>
+      </Form>
     </div>
   )
 }

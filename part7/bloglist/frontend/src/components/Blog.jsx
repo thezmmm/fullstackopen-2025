@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useSelector } from 'react-redux'
+import { Button, ListGroup } from 'react-bootstrap'
 import blogService from '../services/blogService'
 
 const Blog = ({ blog }) => {
@@ -26,22 +27,24 @@ const Blog = ({ blog }) => {
   }
 
   return (
-    <div
-      style={{
-        border: '1px solid #ccc',
-        padding: '8px',
-        marginBottom: '8px',
-        borderRadius: '4px',
-      }}
-    >
-      <Link to={`/blogs/${blog.id}`}>{blog.title}</Link> by {blog.author}{' '}
-      <button onClick={handleLike}>like ({blog.likes})</button>
-      {user?.username === blog.user?.username && (
-        <button onClick={handleRemove} style={{ marginLeft: '8px' }}>
-          remove
-        </button>
-      )}
-    </div>
+    <ListGroup.Item className="d-flex justify-content-between align-items-center">
+      <div>
+        <Link to={`/blogs/${blog.id}`} className="fw-semibold">
+          {blog.title}
+        </Link>
+        <span className="text-muted ms-2">by {blog.author}</span>
+      </div>
+      <div className="d-flex align-items-center gap-2">
+        <Button variant="outline-primary" size="sm" onClick={handleLike}>
+          ♥ {blog.likes}
+        </Button>
+        {user?.username === blog.user?.username && (
+          <Button variant="outline-danger" size="sm" onClick={handleRemove}>
+            remove
+          </Button>
+        )}
+      </div>
+    </ListGroup.Item>
   )
 }
 

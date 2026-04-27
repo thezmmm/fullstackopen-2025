@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { Link } from 'react-router-dom'
+import { Table, Spinner } from 'react-bootstrap'
 import userService from '../services/userService'
 
 const Users = () => {
@@ -8,15 +9,15 @@ const Users = () => {
     queryFn: userService.getAll,
   })
 
-  if (isLoading) return <div>loading...</div>
+  if (isLoading) return <Spinner animation="border" size="sm" />
 
   return (
     <div>
-      <h2>Users</h2>
-      <table>
+      <h2 className="mb-3">Users</h2>
+      <Table striped bordered hover>
         <thead>
           <tr>
-            <th></th>
+            <th>name</th>
             <th>blogs created</th>
           </tr>
         </thead>
@@ -30,7 +31,7 @@ const Users = () => {
             </tr>
           ))}
         </tbody>
-      </table>
+      </Table>
     </div>
   )
 }
