@@ -1,8 +1,8 @@
 import './notification.css'
-import { useNotificationValue } from '../contexts/NotificationContext'
+import { useSelector } from 'react-redux'
 
 const Notification = () => {
-  const notification = useNotificationValue()
+  const notification = useSelector((state) => state.notification)
   if (!notification) return null
   return (
     <div className={notification.type === 'error' ? 'error' : 'success'}>

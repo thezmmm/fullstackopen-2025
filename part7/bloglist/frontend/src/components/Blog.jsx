@@ -1,11 +1,11 @@
 import { Link } from 'react-router-dom'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useSelector } from 'react-redux'
 import blogService from '../services/blogService'
-import { useUserValue } from '../contexts/UserContext'
 
 const Blog = ({ blog }) => {
   const queryClient = useQueryClient()
-  const user = useUserValue()
+  const user = useSelector((state) => state.user)
 
   const likeMutation = useMutation({
     mutationFn: (b) => blogService.update(b.id, { ...b, likes: b.likes + 1 }),

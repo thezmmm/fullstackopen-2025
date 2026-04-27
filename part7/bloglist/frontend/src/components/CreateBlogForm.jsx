@@ -1,11 +1,12 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useDispatch } from 'react-redux'
 import blogService from '../services/blogService'
-import { useNotify } from '../contexts/NotificationContext'
+import { notify } from '../reducers/notificationReducer'
 import useField from '../hooks/useField'
 
 const CreateBlogForm = () => {
   const queryClient = useQueryClient()
-  const notify = useNotify()
+  const dispatch = useDispatch()
   const title = useField('text')
   const author = useField('text')
   const url = useField('text')
@@ -14,12 +15,12 @@ const CreateBlogForm = () => {
     mutationFn: blogService.create,
     onSuccess: (newBlog) => {
       queryClient.invalidateQueries({ queryKey: ['blogs'] })
-      notify(`a new blog ${newBlog.title} by ${newBlog.author} added`)
+      dispatch(notify(`a new blog ${newBlog.title} by ${newBlog.author} added`))
       title.reset()
       author.reset()
       url.reset()
     },
-    onError: () => notify('failed to create blog', 'error'),
+    onError: () => dispatch(notify('failed to create blog', 'error')),
   })
 
   const handleSubmit = (event) => {

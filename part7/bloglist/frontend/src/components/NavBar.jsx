@@ -1,17 +1,12 @@
 import { Link } from 'react-router-dom'
-import { useUserValue, useUserDispatch } from '../contexts/UserContext'
-import blogService from '../services/blogService'
-import storageService from '../services/storageService'
+import { useSelector, useDispatch } from 'react-redux'
+import { logout } from '../reducers/userReducer'
 
 const NavBar = () => {
-  const user = useUserValue()
-  const dispatch = useUserDispatch()
+  const user = useSelector((state) => state.user)
+  const dispatch = useDispatch()
 
-  const handleLogout = () => {
-    storageService.removeUser()
-    blogService.setToken(null)
-    dispatch({ type: 'CLEAR' })
-  }
+  const handleLogout = () => dispatch(logout())
 
   return (
     <nav style={{ background: '#eee', padding: '10px', marginBottom: '16px' }}>

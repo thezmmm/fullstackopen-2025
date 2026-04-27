@@ -1,5 +1,8 @@
 import { Routes, Route } from 'react-router-dom'
-import { useUserValue } from './contexts/UserContext'
+import { useSelector } from 'react-redux'
+import { useEffect } from 'react'
+import { useDispatch } from 'react-redux'
+import { initUser } from './reducers/userReducer'
 import NavBar from './components/NavBar'
 import Notification from './components/Notification'
 import ErrorBoundary from './components/ErrorBoundary'
@@ -13,7 +16,12 @@ import UserView from './components/UserView'
 import NotFound from './components/NotFound'
 
 const App = () => {
-  const user = useUserValue()
+  const user = useSelector((state) => state.user)
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    dispatch(initUser())
+  }, [dispatch])
 
   if (!user) {
     return (

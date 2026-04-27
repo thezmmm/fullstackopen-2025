@@ -1,28 +1,19 @@
-import loginService from '../services/loginService'
-import blogService from '../services/blogService'
-import storageService from '../services/storageService'
-import { useNotify } from '../contexts/NotificationContext'
-import { useUserDispatch } from '../contexts/UserContext'
+import { useDispatch } from 'react-redux'
+import { login } from '../reducers/userReducer'
+import { notify } from '../reducers/notificationReducer'
 import useField from '../hooks/useField'
 
 const LoginForm = () => {
-  const notify = useNotify()
-  const dispatch = useUserDispatch()
+  const dispatch = useDispatch()
   const username = useField('text')
   const password = useField('password')
 
   const handleLogin = async (event) => {
     event.preventDefault()
     try {
-      const user = await loginService.login({
-        username: username.value,
-        password: password.value,
-      })
-      storageService.saveUser(user)
-      blogService.setToken(user.token)
-      dispatch({ type: 'SET', payload: user })
+      await dispatch(login({ username: username.value, password: password.value }))
     } catch {
-      notify('wrong username or password', 'error')
+      dispatch(notify('wrong username or password', 'error'))
     }
   }
 
