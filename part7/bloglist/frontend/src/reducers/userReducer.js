@@ -14,12 +14,24 @@ const userSlice = createSlice({
 
 export const { setUser, clearUser } = userSlice.actions
 
+const isTokenExpired = (token) => {
+  try {
+    const { exp } = JSON.parse(atob(token.split('.')[1]))
+    return exp * 1000 < Date.now()
+  } catch {
+    return true
+  }
+}
+
 export const initUser = () => (dispatch) => {
   const user = storageService.getUser()
-  if (user) {
-    dispatch(setUser(user))
-    blogService.setToken(user.token)
+  if (!user) return
+  if (isTokenExpired(user.token)) {
+    storageService.removeUser()
+    return
   }
+  dispatch(setUser(user))
+  blogService.setToken(user.token)
 }
 
 export const login = (credentials) => async (dispatch) => {
