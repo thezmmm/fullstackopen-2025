@@ -2,6 +2,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useParams } from 'react-router-dom'
 import blogService from '../services/blogService'
 import useField from '../hooks/useField'
+import NotFound from './NotFound'
 
 const BlogView = () => {
   const { id } = useParams()
@@ -29,7 +30,7 @@ const BlogView = () => {
   if (isLoading) return <div>loading...</div>
 
   const blog = blogs?.find(b => b.id === id)
-  if (!blog) return <div>blog not found</div>
+  if (!blog) return <NotFound message="Blog not found" />
 
   const handleLike = () => likeMutation.mutate(blog)
 

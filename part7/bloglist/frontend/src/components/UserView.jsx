@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import { useParams, Link } from 'react-router-dom'
 import userService from '../services/userService'
+import NotFound from './NotFound'
 
 const UserView = () => {
   const { id } = useParams()
@@ -12,7 +13,7 @@ const UserView = () => {
   if (isLoading) return <div>loading...</div>
 
   const user = users?.find(u => u.id === id)
-  if (!user) return <div>user not found</div>
+  if (!user) return <NotFound message="User not found" />
 
   return (
     <div>

@@ -10,6 +10,7 @@ import LoginForm from './components/LoginForm'
 import Togglable from './components/Togglable'
 import Users from './components/Users'
 import UserView from './components/UserView'
+import NotFound from './components/NotFound'
 
 const App = () => {
   const user = useUserValue()
@@ -40,7 +41,7 @@ const App = () => {
           <Route path="/users" element={<Users />} />
           <Route path="/users/:id" element={<UserView />} />
           <Route path="/blogs/:id" element={<BlogView />} />
-          <Route path="*" element={<h2>Page not found</h2>} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </ErrorBoundary>
     </div>
