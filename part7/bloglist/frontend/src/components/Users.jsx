@@ -5,7 +5,7 @@ import userService from '../services/userService'
 const Users = () => {
   const { data: users, isLoading } = useQuery({
     queryKey: ['users'],
-    queryFn: userService.getAll
+    queryFn: userService.getAll,
   })
 
   if (isLoading) return <div>loading...</div>
@@ -21,9 +21,11 @@ const Users = () => {
           </tr>
         </thead>
         <tbody>
-          {users.map(user => (
+          {users.map((user) => (
             <tr key={user.id}>
-              <td><Link to={`/users/${user.id}`}>{user.name}</Link></td>
+              <td>
+                <Link to={`/users/${user.id}`}>{user.name}</Link>
+              </td>
               <td>{user.blogs.length}</td>
             </tr>
           ))}

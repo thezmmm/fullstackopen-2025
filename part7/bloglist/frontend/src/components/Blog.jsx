@@ -9,12 +9,12 @@ const Blog = ({ blog }) => {
 
   const likeMutation = useMutation({
     mutationFn: (b) => blogService.update(b.id, { ...b, likes: b.likes + 1 }),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['blogs'] })
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['blogs'] }),
   })
 
   const removeMutation = useMutation({
     mutationFn: (id) => blogService.remove(id),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['blogs'] })
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['blogs'] }),
   })
 
   const handleLike = () => likeMutation.mutate(blog)
@@ -26,12 +26,20 @@ const Blog = ({ blog }) => {
   }
 
   return (
-    <div style={{ border: '1px solid #ccc', padding: '8px', marginBottom: '8px', borderRadius: '4px' }}>
-      <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
-      {' '}by {blog.author}
-      {' '}<button onClick={handleLike}>like ({blog.likes})</button>
+    <div
+      style={{
+        border: '1px solid #ccc',
+        padding: '8px',
+        marginBottom: '8px',
+        borderRadius: '4px',
+      }}
+    >
+      <Link to={`/blogs/${blog.id}`}>{blog.title}</Link> by {blog.author}{' '}
+      <button onClick={handleLike}>like ({blog.likes})</button>
       {user?.username === blog.user?.username && (
-        <button onClick={handleRemove} style={{ marginLeft: '8px' }}>remove</button>
+        <button onClick={handleRemove} style={{ marginLeft: '8px' }}>
+          remove
+        </button>
       )}
     </div>
   )

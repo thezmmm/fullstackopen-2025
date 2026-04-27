@@ -5,7 +5,7 @@ import blogService from '../services/blogService'
 const BlogList = () => {
   const { data: blogs, isLoading } = useQuery({
     queryKey: ['blogs'],
-    queryFn: blogService.getAll
+    queryFn: blogService.getAll,
   })
 
   if (isLoading) return <div>loading...</div>
@@ -13,9 +13,11 @@ const BlogList = () => {
   return (
     <div>
       <h2>blogs</h2>
-      {[...blogs].sort((a, b) => b.likes - a.likes).map(blog => (
-        <Blog key={blog.id} blog={blog} />
-      ))}
+      {[...blogs]
+        .sort((a, b) => b.likes - a.likes)
+        .map((blog) => (
+          <Blog key={blog.id} blog={blog} />
+        ))}
     </div>
   )
 }

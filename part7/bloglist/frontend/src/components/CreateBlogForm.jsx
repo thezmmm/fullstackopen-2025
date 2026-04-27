@@ -19,12 +19,17 @@ const CreateBlogForm = () => {
       author.reset()
       url.reset()
     },
-    onError: () => notify('failed to create blog', 'error')
+    onError: () => notify('failed to create blog', 'error'),
   })
 
   const handleSubmit = (event) => {
     event.preventDefault()
-    createMutation.mutate({ title: title.value, author: author.value, url: url.value, likes: 0 })
+    createMutation.mutate({
+      title: title.value,
+      author: author.value,
+      url: url.value,
+      likes: 0,
+    })
   }
 
   const { reset: _rt, ...titleProps } = title
@@ -36,13 +41,19 @@ const CreateBlogForm = () => {
       <h2>Create new</h2>
       <form onSubmit={handleSubmit}>
         <div>
-          <label>title <input {...titleProps} name="title" /></label>
+          <label>
+            title <input {...titleProps} name="title" />
+          </label>
         </div>
         <div>
-          <label>author <input {...authorProps} name="author" /></label>
+          <label>
+            author <input {...authorProps} name="author" />
+          </label>
         </div>
         <div>
-          <label>url <input {...urlProps} name="url" /></label>
+          <label>
+            url <input {...urlProps} name="url" />
+          </label>
         </div>
         <button type="submit">create</button>
       </form>

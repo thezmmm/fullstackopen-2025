@@ -14,7 +14,10 @@ const LoginForm = () => {
   const handleLogin = async (event) => {
     event.preventDefault()
     try {
-      const user = await loginService.login({ username: username.value, password: password.value })
+      const user = await loginService.login({
+        username: username.value,
+        password: password.value,
+      })
       storageService.saveUser(user)
       blogService.setToken(user.token)
       dispatch({ type: 'SET', payload: user })

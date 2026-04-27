@@ -30,14 +30,17 @@ const App = () => {
       <Notification />
       <ErrorBoundary>
         <Routes>
-          <Route path="/" element={
-            <div>
-              <Togglable buttonLabel="create new blog">
-                <CreateBlogForm />
-              </Togglable>
-              <BlogList />
-            </div>
-          } />
+          <Route
+            path="/"
+            element={
+              <div>
+                <Togglable buttonLabel="create new blog">
+                  <CreateBlogForm />
+                </Togglable>
+                <BlogList />
+              </div>
+            }
+          />
           <Route path="/users" element={<Users />} />
           <Route path="/users/:id" element={<UserView />} />
           <Route path="/blogs/:id" element={<BlogView />} />
